@@ -149,9 +149,12 @@ export class CalendarCommonRenderer extends Component {
     }
     convertRecordToEvent(record) {
         const allDay = record.isAllDay || record.end.diff(record.start, "hours").hours >= 24;
+        const lotName = record.rawRecord.lot_producing_id ? record.rawRecord.lot_producing_id[1]:"";
+        const productName = record.rawRecord.product_id ? record.rawRecord.product_id[1]:record.product_id;
         return {
             id: record.id,
-            title: record.title,
+            //title: record.title,
+            title: `${lotName} ${productName}`,
             start: record.start.toISO(),
             end:
                 (["week", "month"].includes(this.props.model.scale) && allDay) ||
@@ -220,8 +223,12 @@ export class CalendarCommonRenderer extends Component {
 
         if (record) {
             // This is needed in order to give the possibility to change the event template.
+            const lotName = record.rawRecord.lot_producing_id ? record.rawRecord.lot_producing_id[1]:"";
+            const productName = record.rawRecord.product_id ? record.rawRecord.product_id[1]:record.product_id;
+    
             const injectedContentStr = renderToString(this.constructor.eventTemplate, {
                 ...record,
+                title: `${lotName} ${productName}`,
                 startTime: this.getStartTime(record),
                 endTime: this.getEndTime(record),
             });
